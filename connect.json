@@ -4,10 +4,10 @@
   "modules": {
     "repoPages": [
       {
-        "key": "connect-wiki-page",
+        "key": "wiki",
         "location": "org.bitbucket.repository.navigation",
         "name": {
-          "value": "WIKI"
+          "value": "Wiki"
         },
         "url": "/?repoUuid={repository.uuid}&repo={repository.full_name}&repoScm={repository.scm}&settings={repository.properties.get(attribute=app.key).settings}&userUuid={user.uuid}&userName={user.username}&appKey={app.key}"
       }
