@@ -1,7 +1,7 @@
 import Spinner from "@atlaskit/spinner";
 import React from "react";
 
-import makeRequest, { getQuery } from "./request";
+import makeRequest from "./request";
 
 const pathPattern = /src\/[^/]+\/(.+)/;
 const getPathFromHref = href => pathPattern.exec(href)[1];
