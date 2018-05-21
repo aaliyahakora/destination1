@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://bitbucket-connect-wiki.bitbucket.org",
+  "baseUrl": "https://bitbucket-connect-wiki.bitbucket.io",
   "key": "connect-wiki",
   "modules": {
     "repoPages": [
