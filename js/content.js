@@ -43,9 +43,8 @@ export default class extends React.Component {
   }
 
   loadContent = path => {
-    const repoName = getQuery("repo");
     makeRequest({
-      url: `/2.0/repositories/${repoName}.wiki/src/master/${path}?format=rendered`
+      url: `/2.0/repositories/${this.props.repoName}/src/master/${path}?format=rendered`
     })
       .then(res => {
         this.setState({

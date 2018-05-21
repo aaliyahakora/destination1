@@ -151,7 +151,7 @@ export default class extends React.Component {
                   </ButtonGroup>
                 }
               />
-              <Content path={this.state.path} onOpenPath={this.onOpenPath} />
+              <Content repoName={settings.repoName} path={this.state.path} onOpenPath={this.onOpenPath} />
               {this.state.settingsOpen && (
                 <SettingsModal
                   closeSettings={this.closeSettings}
@@ -165,6 +165,7 @@ export default class extends React.Component {
         </Page>
         <Sidebar
           cards={this.state.cards}
+          repoName={settings.repoName}
           onOpenPath={this.onOpenPath}
           onOpenFile={this.onOpenFile}
           files={this.state.files}

@@ -38,7 +38,7 @@ export default class extends React.Component {
       )[1];
       return (
         <Card title={cardTitle} key={card.name}>
-          <Content path={card.name} onOpenPath={this.props.onOpenPath} />
+          <Content repoName={this.props.repoName} path={card.name} onOpenPath={this.props.onOpenPath} />
         </Card>
       );
     });
