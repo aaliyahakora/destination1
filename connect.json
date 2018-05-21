@@ -1,0 +1,24 @@
+{
+  "baseUrl": "https://bitbucket-connect-wiki.bitbucket.org",
+  "key": "connect-wiki",
+  "modules": {
+    "repoPages": [
+      {
+        "key": "connect-wiki-page",
+        "location": "org.bitbucket.repository.navigation",
+        "name": {
+          "value": "WIKI"
+        },
+        "url": "/wiki?repoUuid={repository.uuid}&repo={repository.full_name}&repoScm={repository.scm}&settings={repository.properties.get(attribute=app.key).settings}&userUuid={user.uuid}&userName={user.username}&appKey={app.key}"
+      }
+    ]
+  },
+  "name": "Connect Wiki",
+  "description": "Render bitbucket wikis with connect.",
+  "scopes": [
+    "repository"
+  ],
+  "contexts": [
+    "account"
+  ]
+}
