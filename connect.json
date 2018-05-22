@@ -9,7 +9,7 @@
         "name": {
           "value": "Wiki"
         },
-        "url": "/?repoUuid={repository.uuid}&repo={repository.full_name}&repoScm={repository.scm}&settings={repository.properties.get(attribute=app.key).settings}&userUuid={user.uuid}&userName={user.username}&appKey={app.key}"
+        "url": "/?repoUuid={repository.uuid}&repo={repository.full_name}&repoScm={repository.scm}&settings={repository.properties.get(attribute=app.key).settings}&userUuid={user.uuid}&userName={user.username}&appKey={app.key}&userIsAdmin={repository.has_permission(permission=\"admin\")}"
       }
     ]
   },

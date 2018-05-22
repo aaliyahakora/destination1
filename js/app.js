@@ -7,54 +7,22 @@ import React from "react";
 import CloneModalButton from "./clone-button";
 import Content from "./content";
 import Sidebar from "./sidebar";
-import SettingsModal from "./settings";
-import makeRequest, { getQuery } from "./request";
-import { flattenTree, parseSettings } from "./util";
-
-// FIXME - generalize this
-const repoName = getQuery("repo");
-const repoUuid = getQuery("repoUuid");
-const repoScm = getQuery("repoScm");
-const appKey = getQuery("appKey");
-const userName = getQuery("userName");
-const origin = getQuery("xdm_e");
-const userUuid = getQuery("userUuid");
-
-const settings = parseSettings(getQuery("settings"));
-
-const originUrl = new URL(origin);
+import SettingsModal from "./settings-modal";
+import makeRequest from "./request";
+import { flattenTree, parseQuery } from "./util";
 
 const basename = /^(.+)\..+$/;
-
-const repo = {
-  uuid: repoUuid,
-  name: repoName,
-  full_name: settings.repoName,
-  scm: repoScm,
-  links: {
-    clone: [
-      {
-        name: "https",
-        href: `https://${userName}@${originUrl.host}/${
-          settings.repoName
-        }.${repoScm}`
-      },
-      {
-        name: "ssh",
-        href: `git@${originUrl.host}:${settings.repoName}.${repoScm}`
-      }
-    ]
-  }
-};
-
-const user = {
-  uuid: userUuid,
-  username: userName
-};
 
 export default class extends React.Component {
   constructor(props) {
     super(props);
+    const {parentRepo, user, app, settings} = parseQuery()
+
+    this.parentRepo = parentRepo;
+    this.user = user;
+    this.app = app;
+    this.settings = settings;
+
     this.state = {
       path: settings.index,
       settingsOpen: false,
@@ -72,7 +40,7 @@ export default class extends React.Component {
 
   getWikiFiles = () => {
     makeRequest({
-      url: `/internal/repositories/${settings.repoName}/tree/master/`
+      url: `/internal/repositories/${this.settings.repoName}/tree/master/`
     }).then(tree => {
       const fileTree = flattenTree(tree[0]);
       const cards = fileTree.filter(x => x.name.startsWith("cards"));
@@ -126,17 +94,17 @@ export default class extends React.Component {
               <PageHeader
                 breadcrumbs={
                   <BreadcrumbsStateless>
-                    <BreadcrumbsItem text={repoName.split("/")[0]} />
-                    <BreadcrumbsItem text={repoName.split("/")[1]} />
+                    <BreadcrumbsItem text={this.parentRepo.repoName.split("/")[0]} />
+                    <BreadcrumbsItem text={this.parentRepo.repoName.split("/")[1]} />
                   </BreadcrumbsStateless>
                 }
                 actions={
                   <ButtonGroup>
-                    <CloneModalButton repo={repo} user={user}>
+                    <CloneModalButton origin={this.app.origin} repo={this.parentRepo} user={this.user} settings={this.settings} >
                       Clone
                     </CloneModalButton>
                     <Button
-                      href={`${origin}/${settings.repoName}/src/master/${
+                      href={`${this.app.origin}/${this.settings.repoName}/src/master/${
                         this.state.path
                       }?mode=edit&spa=0&fileviewer=file-view-default`}
                       target="_blank"
@@ -151,13 +119,13 @@ export default class extends React.Component {
                   </ButtonGroup>
                 }
               />
-              <Content repoName={settings.repoName} path={this.state.path} onOpenPath={this.onOpenPath} />
+              <Content repoName={this.settings.repoName} path={this.state.path} onOpenPath={this.onOpenPath} />
               {this.state.settingsOpen && (
                 <SettingsModal
                   closeSettings={this.closeSettings}
-                  settings={settings}
-                  appKey={appKey}
-                  repoUuid={repoUuid}
+                  settings={this.settings}
+                  app={this.app}
+                  parentRepo={this.parentRepo}
                 />
               )}
             </GridColumn>
@@ -165,7 +133,7 @@ export default class extends React.Component {
         </Page>
         <Sidebar
           cards={this.state.cards}
-          repoName={settings.repoName}
+          repoName={this.settings.repoName}
           onOpenPath={this.onOpenPath}
           onOpenFile={this.onOpenFile}
           files={this.state.files}
