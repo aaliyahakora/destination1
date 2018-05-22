@@ -11,26 +11,37 @@ export default class extends React.Component {
     };
   }
 
+  onSaved = () => {
+    this.setState({saving: false})
+  }
+
   handleSubmit = () => {
     this.setState({ saving: true });
-    const formData = new FormData(this.form);
+    const formData = new FormData(this.form.current);
+    const {parentRepo, app, closeSettings} = this.props;
 
     return makeRequest({
-      url: `/2.0/repositories/{}/${this.props.parentRepo.repoUuid}/properties/${
-        this.props.app.appKey
+      url: `/2.0/repositories/{}/${parentRepo.repoUuid}/properties/${
+        app.appKey
       }/settings`,
       type: "PUT",
       data: formData
     }).then(res => {
       this.setState({ saving: false });
-      this.props.closeSettings();
+      closeSettings();
     });
   };
 
   render() {
+    const { title, text, settings } = this.props;
     return (
-      <form ref={this.form} onSubmit={this.handleSubmit} style={{ paddingBottom: "15px" }}>
-        <h2>Settings</h2>
+      <form
+        ref={this.form}
+        onSubmit={this.handleSubmit}
+        style={{ paddingBottom: "15px" }}
+      >
+        <h2>{title || "Settings"}</h2>
+        {text && <div>{text}</div>}
         <div className="ak-field-group">
           <label htmlFor="repoName">Wiki Repository Name</label>
           <input
@@ -39,7 +50,7 @@ export default class extends React.Component {
             id="repoName"
             name="repoName"
             placeholder="eg. bitbucket/bitbucket.wiki"
-            defaultValue={this.props.settings.repoName}
+            defaultValue={settings.repoName}
           />
         </div>
         <div className="ak-field-group">
@@ -50,12 +61,10 @@ export default class extends React.Component {
             className="ak-field-text ak-field__size-medium"
             id="index"
             name="index"
-            defaultValue={this.props.settings.index}
+            defaultValue={settings.index}
           />
         </div>
       </form>
     );
   }
 }
-
-

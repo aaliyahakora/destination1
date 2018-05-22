@@ -1,7 +1,7 @@
 {
   "name": "bitbucket-connect-wiki",
   "version": "1.0.0",
-  "description": "Wikis, but, like, in Connect",
+  "description": "Wikis in Connect",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

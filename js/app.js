@@ -1,12 +1,11 @@
-import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
-import Button, { ButtonGroup } from "@atlaskit/button";
 import Page, { Grid, GridColumn } from "@atlaskit/page";
-import PageHeader from "@atlaskit/page-header";
+
 import React from "react";
 
-import CloneModalButton from "./clone-button";
 import Content from "./content";
+import Header from "./header";
 import Sidebar from "./sidebar";
+import Settings from "./settings";
 import SettingsModal from "./settings-modal";
 import makeRequest from "./request";
 import { flattenTree, parseQuery } from "./util";
@@ -16,7 +15,7 @@ const basename = /^(.+)\..+$/;
 export default class extends React.Component {
   constructor(props) {
     super(props);
-    const {parentRepo, user, app, settings} = parseQuery()
+    const { parentRepo, user, app, settings } = parseQuery();
 
     this.parentRepo = parentRepo;
     this.user = user;
@@ -29,6 +28,7 @@ export default class extends React.Component {
       files: [],
       cards: []
     };
+
     if (settings.repoName) {
       this.getWikiFiles();
     }
@@ -53,6 +53,10 @@ export default class extends React.Component {
 
   closeSettings = () => {
     this.setState({ settingsOpen: false });
+  };
+
+  openSettings = () => {
+    this.setState({ settingsOpen: true });
   };
 
   onOpenFile = file => {
@@ -86,58 +90,55 @@ export default class extends React.Component {
   };
 
   render() {
+    const settingsProps = {
+      closeSettings: this.closeSettings,
+      settings: this.settings,
+      app: this.app,
+      parentRepo: this.parentRepo
+    };
+
     return (
       <div style={{ display: "flex" }}>
         <Page>
           <Grid spacing="compact">
-            <GridColumn medium={12}>
-              <PageHeader
-                breadcrumbs={
-                  <BreadcrumbsStateless>
-                    <BreadcrumbsItem text={this.parentRepo.repoName.split("/")[0]} />
-                    <BreadcrumbsItem text={this.parentRepo.repoName.split("/")[1]} />
-                  </BreadcrumbsStateless>
-                }
-                actions={
-                  <ButtonGroup>
-                    <CloneModalButton origin={this.app.origin} repo={this.parentRepo} user={this.user} settings={this.settings} >
-                      Clone
-                    </CloneModalButton>
-                    <Button
-                      href={`${this.app.origin}/${this.settings.repoName}/src/master/${
-                        this.state.path
-                      }?mode=edit&spa=0&fileviewer=file-view-default`}
-                      target="_blank"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => this.setState({ settingsOpen: true })}
-                    >
-                      Settings
-                    </Button>
-                  </ButtonGroup>
-                }
-              />
-              <Content repoName={this.settings.repoName} path={this.state.path} onOpenPath={this.onOpenPath} />
-              {this.state.settingsOpen && (
-                <SettingsModal
-                  closeSettings={this.closeSettings}
-                  settings={this.settings}
-                  app={this.app}
-                  parentRepo={this.parentRepo}
+            {!this.settings || !this.settings.repoName ? (
+              <GridColumn medium={12}>
+                <Settings
+                  title="Setup"
+                  text="Hey set your thing up!"
+                  {...settingsProps}
                 />
-              )}
-            </GridColumn>
+              </GridColumn>
+            ) : (
+              <GridColumn medium={12}>
+                <Header
+                  user={this.user}
+                  settings={this.settings}
+                  parentRepo={this.parentRepo}
+                  app={this.app}
+                  path={this.state.path}
+                  onCloseSettings={this.closeSettings}
+                  onOpenSettings={this.openSettings}
+                />
+                <Content
+                  repoName={this.settings.repoName}
+                  path={this.state.path}
+                  onOpenPath={this.onOpenPath}
+                />
+              </GridColumn>
+            )}
+            {this.state.settingsOpen && <SettingsModal {...settingsProps} />}
           </Grid>
         </Page>
-        <Sidebar
-          cards={this.state.cards}
-          repoName={this.settings.repoName}
-          onOpenPath={this.onOpenPath}
-          onOpenFile={this.onOpenFile}
-          files={this.state.files}
-        />
+        {this.settings && this.settings.repoName && (
+          <Sidebar
+            cards={this.state.cards}
+            repoName={this.settings.repoName}
+            onOpenPath={this.onOpenPath}
+            onOpenFile={this.onOpenFile}
+            files={this.state.files}
+          />
+        )}
       </div>
     );
   }
