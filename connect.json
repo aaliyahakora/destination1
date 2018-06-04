@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://bitbucket-connect-wiki.bitbucket.io",
+  "baseUrl": "https://tkells.ngrok.io",
   "key": "connect-wiki",
   "modules": {
     "repoPages": [

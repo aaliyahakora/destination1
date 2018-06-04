@@ -40,7 +40,8 @@ export const parseQuery = () => ({
   },
   user: {
     userName: getQuery("userName"),
-    userUuid: getQuery("userUuid")
+    userUuid: getQuery("userUuid"),
+    userIsAdmin: getQuery("userIsAdmin"),
   },
   app: { appKey: getQuery("appKey"), origin: getQuery("xdm_e") },
   settings: parseSettings(getQuery("settings"))

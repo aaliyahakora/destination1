@@ -35,13 +35,14 @@ export default class extends React.Component {
   render() {
     const { title, text, settings } = this.props;
     return (
+      <div>
+      { this.props.children }
       <form
         ref={this.form}
         onSubmit={this.handleSubmit}
         style={{ paddingBottom: "15px" }}
       >
         <h2>{title || "Settings"}</h2>
-        {text && <div>{text}</div>}
         <div className="ak-field-group">
           <label htmlFor="repoName">Wiki Repository Name</label>
           <input
@@ -50,7 +51,7 @@ export default class extends React.Component {
             id="repoName"
             name="repoName"
             placeholder="eg. bitbucket/bitbucket.wiki"
-            defaultValue={settings.repoName}
+            defaultValue={settings ? settings.repoName : '' }
           />
         </div>
         <div className="ak-field-group">
@@ -61,10 +62,11 @@ export default class extends React.Component {
             className="ak-field-text ak-field__size-medium"
             id="index"
             name="index"
-            defaultValue={settings.index}
+            defaultValue={settings ? settings.index : ''}
           />
         </div>
       </form>
+      </div>
     );
   }
 }
