@@ -24,7 +24,7 @@ export default class extends React.Component {
 					closeSettings={closeSettings}
 					app={app}
 					parentRepo={parentRepo}
-					ref={s => (this.settings = s)}
+					ref={s => {this.settings = s}}
 				/>
 			</ModalDialog>
 		);

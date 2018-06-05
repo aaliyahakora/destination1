@@ -3,9 +3,7 @@ import { Expander } from "@atlassian/bitkit-sidebar";
 
 export default props => {
   const label = <span>{props.title}</span>;
-  const isCollapsed = props.initialIsCollapsed
-    ? true
-    : false;
+  const isCollapsed = !!props.initialIsCollapsed;
   return (
     <div style={{ marginTop: "12px" }}>
       <Expander

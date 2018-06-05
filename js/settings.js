@@ -6,17 +6,9 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
     this.form = React.createRef();
-    this.state = {
-      saving: false
-    };
-  }
-
-  onSaved = () => {
-    this.setState({saving: false})
   }
 
   handleSubmit = () => {
-    this.setState({ saving: true });
     const formData = new FormData(this.form.current);
     const {parentRepo, app, closeSettings} = this.props;
 
@@ -26,14 +18,14 @@ export default class extends React.Component {
       }/settings`,
       type: "PUT",
       data: formData
-    }).then(res => {
-      this.setState({ saving: false });
+    }).then(() => {
       closeSettings();
     });
   };
 
   render() {
-    const { title, text, settings } = this.props;
+    const { title, text, settings, parentRepo } = this.props;
+
     return (
       <div>
       { this.props.children }
@@ -51,7 +43,7 @@ export default class extends React.Component {
             id="repoName"
             name="repoName"
             placeholder="eg. bitbucket/bitbucket.wiki"
-            defaultValue={settings ? settings.repoName : '' }
+            defaultValue={parentRepo.repoName ? parentRepo.repoName : '' }
           />
         </div>
         <div className="ak-field-group">

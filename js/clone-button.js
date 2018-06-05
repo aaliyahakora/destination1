@@ -12,40 +12,41 @@ export default class extends React.Component {
   dismissDialog = () => this.setState({ isOpen: false });
 
   render() {
-    const originUrl = new URL(this.props.origin);
+    const {origin, repo, settings, user, children} = this.props
+    const originUrl = new URL(origin);
 
-    const repo = {
-      uuid: this.props.repo.repoUuid,
-      name: this.props.repo.repoName,
-      full_name: this.props.settings.repoName,
-      scm: this.props.repo.repoScm,
+    const repository = {
+      uuid: repo.repoUuid,
+      name: repo.repoName,
+      full_name: settings.repoName,
+      scm: repo.repoScm,
       links: {
         clone: [
           {
             name: "https",
-            href: `https://${this.props.user.userName}@${originUrl.host}/${
-              this.props.settings.repoName
-            }.${this.props.repo.repoScm}`
+            href: `https://${user.userName}@${originUrl.host}/${
+              settings.repoName
+            }.${repo.repoScm}`
           },
           {
             name: "ssh",
-            href: `git@${originUrl.host}:${this.props.repo.repoName}.${this.props.repo.repoScm}`
+            href: `git@${originUrl.host}:${repo.repoName}.${repo.repoScm}`
           }
         ]
       }
     };
 
-    const user = {
-      uuid: this.props.user.userUuid,
-      username: this.props.user.userName
+    const u = {
+      uuid: user.userUuid,
+      username: user.userName
     };
 
     return (
       <div>
         <CloneModalDialog
           onDialogDismissed={this.dismissDialog}
-          repository={repo}
-          user={user}
+          repository={repository}
+          user={u}
           defaultProtocol='https'
           isOpen={this.state.isOpen}
         />
@@ -56,7 +57,7 @@ export default class extends React.Component {
             })
           }
         >
-          {this.props.children}
+          {children}
         </Button>
       </div>
     );
