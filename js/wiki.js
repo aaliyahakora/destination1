@@ -18,9 +18,10 @@ export default class extends React.Component {
         this.user = user;
         this.app = app;
         this.settings = settings;
-
+        // Strip leading and trailing slashes
+        const baseDir = this.props.settings.baseDir.replace(/^\/|\/$/g, '');
         this.state = {
-            path: this.props.settings.index,
+            path: `${baseDir}/${this.props.settings.index}`,
             settingsOpen: false,
             files: [],
             cards: []

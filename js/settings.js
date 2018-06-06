@@ -47,6 +47,17 @@ export default class extends React.Component {
           />
         </div>
         <div className="ak-field-group">
+          <label htmlFor="baseDir">Base Directory</label>
+          <input
+            placeholder="/"
+            type="text"
+            className="ak-field-text ak-field__size-medium"
+            id="baseDir"
+            name="baseDir"
+            defaultValue={settings ? settings.baseDir : '/'}
+          />
+        </div>
+        <div className="ak-field-group">
           <label htmlFor="index">Index Page</label>
           <input
             placeholder="Home.md"

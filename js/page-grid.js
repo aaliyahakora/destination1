@@ -7,8 +7,9 @@ export default class extends React.Component {
 		return (
 			<Page>
 				<Grid spacing="compact">
-					<GridColumn medium={12} />
+					<GridColumn medium={12}>
 					{this.props.children}
+					</GridColumn>
 				</Grid>
 			</Page>
 		);
