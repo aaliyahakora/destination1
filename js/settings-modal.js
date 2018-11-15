@@ -35,6 +35,10 @@ export default class extends React.Component {
   };
 
   render() {
+    if (!this.context.isOpen) {
+      return null;
+    }
+
     const { settings, parentRepo } = this.props;
 
     const actions = [

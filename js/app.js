@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SettingsModal, { SettingsState, SettingsToggle } from './settings-modal';
+import SettingsModal, { SettingsToggle } from './settings-modal';
 import { parseQuery } from './util';
 import Wiki from './wiki';
 import ZeroState from './zero-state';
@@ -38,17 +38,7 @@ export default class extends React.Component {
             />
           )}
         </div>
-        <SettingsState>
-          {({ isOpen }) =>
-            isOpen && (
-              <SettingsModal
-                settings={settings}
-                app={app}
-                parentRepo={parentRepo}
-              />
-            )
-          }
-        </SettingsState>
+        <SettingsModal settings={settings} app={app} parentRepo={parentRepo} />
       </SettingsToggle>
     );
   }
