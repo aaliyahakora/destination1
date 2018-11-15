@@ -1,9 +1,9 @@
-import React from "react";
-import Sidebar from "@atlassian/bitkit-sidebar";
+import React from 'react';
+import Sidebar from '@atlassian/bitkit-sidebar';
 
-import Card from "./card";
-import Content from "./content";
-import * as styles from "./sidebar.style";
+import Card from './card';
+import Content from './content';
+import * as styles from './sidebar.style';
 
 export default class extends React.Component {
   render() {
@@ -17,12 +17,12 @@ export default class extends React.Component {
 
     // Always render the pages card and map over optional user-defined cards
     const pagesCard = (
-      <Card initialIsCollapsed title="Pages">
-        <ul style={{ listStyle: "none", padding: 0 }}>
+      <Card initialIsCollapsed title="Pages" key="pages-card">
+        <ul style={{ listStyle: 'none', padding: 0 }}>
           {this.props.files.map(file => (
             <li
               key={file.name}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
               onClick={() => this.props.onOpenFile(file)}
             >
               {file.name}
@@ -38,7 +38,11 @@ export default class extends React.Component {
       )[1];
       return (
         <Card title={cardTitle} key={card.name}>
-          <Content repoName={this.props.repoName} path={card.name} onOpenPath={this.props.onOpenPath} />
+          <Content
+            repoName={this.props.repoName}
+            path={card.name}
+            onOpenPath={this.props.onOpenPath}
+          />
         </Card>
       );
     });
