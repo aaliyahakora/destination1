@@ -5,14 +5,11 @@ import PageHeader from '@atlaskit/page-header';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
 
 import PageGrid from './page-grid';
-import SettingsModal, { SettingsState } from './settings-modal';
-import { AppType, RepositoryType, SettingsType, UserType } from './types';
+import { RepositoryType, UserType } from './types';
 
 export default class extends React.Component {
   static propTypes = {
-    app: AppType,
     parentRepo: RepositoryType,
-    settings: SettingsType,
     user: UserType,
   };
 
@@ -21,7 +18,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const { user, parentRepo, app, settings } = this.props;
+    const { user, parentRepo } = this.props;
 
     return (
       <PageGrid>
@@ -65,17 +62,6 @@ export default class extends React.Component {
               Please contact the repository admin to configure the Wiki
             </small>
           )}
-          <SettingsState>
-            {({ isOpen }) =>
-              isOpen && (
-                <SettingsModal
-                  settings={settings}
-                  app={app}
-                  parentRepo={parentRepo}
-                />
-              )
-            }
-          </SettingsState>
         </div>
       </PageGrid>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SettingsToggle } from './settings-modal';
+import SettingsModal, { SettingsState, SettingsToggle } from './settings-modal';
 import { parseQuery } from './util';
 import Wiki from './wiki';
 import ZeroState from './zero-state';
@@ -23,22 +23,32 @@ export default class extends React.Component {
   render() {
     const { parentRepo, user, app, settings } = parseQuery();
     user.userIsAdmin = user.userIsAdmin === 'true';
-    const props = {
-      user,
-      settings,
-      app,
-      parentRepo,
-    };
 
     return (
       <SettingsToggle value={this.state}>
         <div style={{ display: 'flex' }}>
           {!settings || !settings.repoName ? (
-            <ZeroState {...props} />
+            <ZeroState user={user} parentRepo={parentRepo} />
           ) : (
-            <Wiki {...props} />
+            <Wiki
+              app={app}
+              parentRepo={parentRepo}
+              settings={settings}
+              user={user}
+            />
           )}
         </div>
+        <SettingsState>
+          {({ isOpen }) =>
+            isOpen && (
+              <SettingsModal
+                settings={settings}
+                app={app}
+                parentRepo={parentRepo}
+              />
+            )
+          }
+        </SettingsState>
       </SettingsToggle>
     );
   }

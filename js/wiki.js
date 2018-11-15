@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import Content from './content';
 import PageGrid from './page-grid';
 import Header from './header';
-import SettingsModal, { SettingsState } from './settings-modal';
 import Sidebar from './sidebar';
 import makeRequest from './request';
 import { AppType, RepositoryType, SettingsType, UserType } from './types';
@@ -100,17 +99,6 @@ export default class extends React.Component {
             path={this.state.path}
             onOpenPath={this.onOpenPath}
           />
-          <SettingsState>
-            {({ isOpen }) =>
-              isOpen && (
-                <SettingsModal
-                  settings={settings}
-                  app={app}
-                  parentRepo={parentRepo}
-                />
-              )
-            }
-          </SettingsState>
         </PageGrid>
         <Sidebar
           cards={this.state.cards}
