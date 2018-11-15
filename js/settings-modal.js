@@ -1,32 +1,62 @@
-import React from "react";
-import ModalDialog from "@atlaskit/modal-dialog";
+import React from 'react';
+import ModalDialog from '@atlaskit/modal-dialog';
 
-import Settings from "./settings";
+import makeRequest from './request';
+import Settings from './settings';
+import { AppType, RepositoryType, SettingsType } from './types';
+
+const SettingsContext = React.createContext({
+  isOpen: false,
+  openSettings: () => {},
+  closeSettings: () => {},
+});
+export const SettingsState = SettingsContext.Consumer;
+export const SettingsToggle = SettingsContext.Provider;
 
 export default class extends React.Component {
-	saveForm = () => {
-		if (this.settings) {
-			this.settings.handleSubmit();
-		}
-	};
+  static contextType = SettingsContext;
 
-	render() {
-		const { closeSettings, settings, parentRepo, app } = this.props;
-		const actions = [
-			{ text: "Save", onClick: this.saveForm },
-			{ text: "Cancel", onClick: closeSettings }
-		];
+  static propTypes = {
+    app: AppType,
+    parentRepo: RepositoryType,
+    settings: SettingsType,
+  };
 
-		return (
-			<ModalDialog heading="Settings" onClose={closeSettings} actions={actions}>
-				<Settings
-					settings={settings}
-					closeSettings={closeSettings}
-					app={app}
-					parentRepo={parentRepo}
-					ref={s => {this.settings = s}}
-				/>
-			</ModalDialog>
-		);
-	}
+  saveSettings = () => {
+    const { parentRepo, app } = this.props;
+
+    makeRequest({
+      url: `/2.0/repositories/{}/${parentRepo.repoUuid}/properties/${
+        app.appKey
+      }/settings`,
+      type: 'PUT',
+      data: this.settings.getData(),
+    }).then(this.context.closeSettings);
+  };
+
+  render() {
+    const { settings, parentRepo } = this.props;
+
+    const actions = [
+      { text: 'Save', onClick: this.saveSettings },
+      { text: 'Cancel', onClick: this.context.closeSettings },
+    ];
+
+    return (
+      <ModalDialog
+        heading="Settings"
+        onClose={this.context.closeSettings}
+        actions={actions}
+      >
+        <Settings
+          onSubmit={this.saveSettings}
+          parentRepo={parentRepo}
+          ref={s => {
+            this.settings = s;
+          }}
+          settings={settings}
+        />
+      </ModalDialog>
+    );
+  }
 }
