@@ -5,20 +5,20 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import React from 'react';
 
 import CloneModalButton from './clone-button';
-import { SettingsState } from './settings-modal';
-import { AppType, RepositoryType, SettingsType, UserType } from './types';
+import Settings from './settings';
+import { AppType, RepositoryType, UserType } from './types';
 
 export default class extends React.Component {
   static propTypes = {
     app: AppType,
     parentRepo: RepositoryType,
     path: PropTypes.string,
-    settings: SettingsType,
+    repoName: PropTypes.string,
     user: UserType,
   };
 
   render() {
-    const { user, settings, parentRepo, app, path } = this.props;
+    const { user, repoName, parentRepo, app, path } = this.props;
 
     return (
       <PageHeader
@@ -35,23 +35,23 @@ export default class extends React.Component {
               origin={app.origin}
               repo={parentRepo}
               user={user}
-              settings={settings}
+              repoName={repoName}
             >
               Clone
             </CloneModalButton>
             <Button
-              href={`${app.origin}/${
-                settings.repoName
-              }/src/master/${path}?mode=edit&spa=0&fileviewer=file-view-default`}
+              href={`${
+                app.origin
+              }/${repoName}/src/master/${path}?mode=edit&spa=0&fileviewer=file-view-default`}
               target="_blank"
             >
               Edit
             </Button>
-            <SettingsState>
+            <Settings>
               {({ openSettings }) => (
                 <Button onClick={openSettings}>Settings</Button>
               )}
-            </SettingsState>
+            </Settings>
           </ButtonGroup>
         }
       />

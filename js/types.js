@@ -5,16 +5,20 @@ export const AppType = PropTypes.exact({
   origin: PropTypes.string,
 });
 
+export const CardType = PropTypes.exact({
+  name: PropTypes.string,
+});
+
+export const FileType = PropTypes.exact({
+  name: PropTypes.string,
+  size: PropTypes.number,
+  type: PropTypes.string,
+});
+
 export const RepositoryType = PropTypes.exact({
   repoName: PropTypes.string,
   repoScm: PropTypes.string,
   repoUuid: PropTypes.string,
-});
-
-export const SettingsType = PropTypes.exact({
-  index: PropTypes.string,
-  repoName: PropTypes.string,
-  baseDir: PropTypes.string,
 });
 
 export const UserType = PropTypes.exact({

@@ -3,29 +3,30 @@ import React, { Fragment } from 'react';
 import Content from './content';
 import PageGrid from './page-grid';
 import Header from './header';
+import { SettingsContext } from './settings';
 import Sidebar from './sidebar';
 import makeRequest from './request';
-import { AppType, RepositoryType, SettingsType, UserType } from './types';
+import { AppType, RepositoryType, UserType } from './types';
 import { flattenTree } from './util';
 
 const basename = /^(.+)\..+$/;
 
-const getPath = settings => {
-  const { baseDir, index } = settings;
+const getPath = ({ baseDir, index }) => {
   const base = baseDir.replace(/^\/|\/$/g, '');
-  return `${base}/${index}`;
+  return base ? `${base}/${index}` : index;
 };
 
 export default class extends React.Component {
+  static contextType = SettingsContext;
+
   static propTypes = {
     app: AppType,
     parentRepo: RepositoryType,
-    settings: SettingsType,
     user: UserType,
   };
 
   state = {
-    path: getPath(this.props.settings),
+    path: getPath(this.context),
     cards: [],
     files: [],
   };
@@ -37,9 +38,7 @@ export default class extends React.Component {
 
   getWikiFiles = () => {
     makeRequest({
-      url: `/internal/repositories/${
-        this.props.settings.repoName
-      }/tree/master/`,
+      url: `/internal/repositories/${this.context.repoName}/tree/master/`,
     }).then(tree => {
       const fileTree = flattenTree(tree[0]);
       const cards = fileTree.filter(x => x.name.startsWith('cards'));
@@ -62,9 +61,7 @@ export default class extends React.Component {
       file => encodeURI(file.name) === path
     );
     if (exactFile) {
-      this.setState({
-        path: exactFile.name,
-      });
+      this.setState({ path });
       return;
     }
     // check without extensions
@@ -81,28 +78,27 @@ export default class extends React.Component {
   };
 
   render() {
-    const { app, parentRepo, settings, user } = this.props;
+    const { app, parentRepo, user } = this.props;
+    const { repoName } = this.context;
+
     return (
       <Fragment>
         <PageGrid>
           <Header
             user={user}
-            settings={settings}
             parentRepo={parentRepo}
             app={app}
             path={this.state.path}
-            onCloseSettings={this.closeSettings}
-            onOpenSettings={this.openSettings}
           />
           <Content
-            repoName={settings.repoName}
+            repoName={repoName}
             path={this.state.path}
             onOpenPath={this.onOpenPath}
           />
         </PageGrid>
         <Sidebar
           cards={this.state.cards}
-          repoName={settings.repoName}
+          repoName={repoName}
           onOpenPath={this.onOpenPath}
           onOpenFile={this.onOpenFile}
           files={this.state.files}

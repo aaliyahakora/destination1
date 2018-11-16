@@ -1,11 +1,21 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Sidebar from '@atlassian/bitkit-sidebar';
 
 import Card from './card';
 import Content from './content';
 import * as styles from './sidebar.style';
+import { FileType } from './types';
 
 export default class extends React.Component {
+  static propTypes = {
+    cards: PropTypes.arrayOf(FileType),
+    files: PropTypes.arrayOf(FileType),
+    onOpenFile: PropTypes.func,
+    onOpenPath: PropTypes.func,
+    repoName: PropTypes.string,
+  };
+
   render() {
     const sidebarIcon = (
       <img
@@ -47,7 +57,7 @@ export default class extends React.Component {
       );
     });
 
-    cards.push(pagesCard);
+    // cards.push(pagesCard);
 
     return (
       <styles.Container>
@@ -55,7 +65,7 @@ export default class extends React.Component {
           resizable
           // isCollapsed - # FIXME make this an option?
           icon={sidebarIcon}
-          expandedContent={[cards]}
+          expandedContent={[pagesCard, ...cards]}
           collapsedWidth={64}
           expandedWidth={264}
           minExpandedWidth={200}

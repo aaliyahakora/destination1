@@ -5,7 +5,7 @@ import PageHeader from '@atlaskit/page-header';
 import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
 
 import PageGrid from './page-grid';
-import { SettingsState } from './settings-modal';
+import Settings from './settings';
 import { RepositoryType, UserType } from './types';
 
 export default class extends React.Component {
@@ -50,7 +50,7 @@ export default class extends React.Component {
             example of a wiki in action!
           </p>
           <p>
-            <SettingsState>
+            <Settings>
               {({ openSettings }) => (
                 <Button
                   appearance="primary"
@@ -60,7 +60,7 @@ export default class extends React.Component {
                   Configure
                 </Button>
               )}
-            </SettingsState>
+            </Settings>
           </p>
           {user.userIsAdmin === 'false' && (
             <small>
