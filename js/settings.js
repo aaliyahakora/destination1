@@ -3,6 +3,18 @@ import React, { Fragment } from 'react';
 
 import { RepositoryType, SettingsType } from './types';
 
+const getRepoName = (settings, parentRepo) => {
+  if (settings && settings.repoName) {
+    return settings.repoName;
+  }
+  if (parentRepo && parentRepo.repoName) {
+    return parentRepo.repoName;
+  }
+  return '';
+};
+const getBaseDir = settings => (settings && settings.baseDir) || '/';
+const getIndex = settings => (settings && settings.index) || 'Home.md';
+
 export default class extends React.Component {
   static propTypes = {
     parentRepo: RepositoryType,
@@ -11,11 +23,9 @@ export default class extends React.Component {
   };
 
   state = {
-    repoName: this.props.parentRepo.repoName
-      ? this.props.parentRepo.repoName
-      : '',
-    baseDir: this.props.settings ? this.props.settings.baseDir : '/',
-    index: this.props.settings ? this.props.settings.index : '',
+    repoName: getRepoName(this.props.settings, this.props.parentRepo),
+    baseDir: getBaseDir(this.props.settings),
+    index: getIndex(this.props.settings),
   };
 
   onInputChange = event => {
@@ -43,12 +53,7 @@ export default class extends React.Component {
   render() {
     return (
       <Fragment>
-        <form
-          onSubmit={this.onSubmit}
-          ref={f => {
-            this.form = f;
-          }}
-        >
+        <form onSubmit={this.onSubmit}>
           <div className="ak-field-group">
             <label htmlFor="repoName">Wiki Repository Name</label>
             <input
