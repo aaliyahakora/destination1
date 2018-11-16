@@ -11,7 +11,11 @@ export const RepositoryType = PropTypes.exact({
   repoUuid: PropTypes.string,
 });
 
-export const SettingsType = PropTypes.object;
+export const SettingsType = PropTypes.exact({
+  index: PropTypes.string,
+  repoName: PropTypes.string,
+  baseDir: PropTypes.string,
+});
 
 export const UserType = PropTypes.exact({
   userIsAdmin: PropTypes.bool,
