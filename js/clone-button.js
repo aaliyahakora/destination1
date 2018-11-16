@@ -1,8 +1,7 @@
-import React from "react";
-import Button from "@atlaskit/button";
+import React from 'react';
+import Button from '@atlaskit/button';
 
-import {CloneModalDialog} from "@atlassian/bitkit-clone-controls";
-
+import { CloneModalDialog } from '@atlassian/bitkit-clone-controls';
 
 export default class extends React.Component {
   state = {
@@ -12,33 +11,33 @@ export default class extends React.Component {
   dismissDialog = () => this.setState({ isOpen: false });
 
   render() {
-    const {origin, repo, settings, user, children} = this.props
+    const { origin, repo, repoName, user, children } = this.props;
     const originUrl = new URL(origin);
 
     const repository = {
       uuid: repo.repoUuid,
       name: repo.repoName,
-      full_name: settings.repoName,
+      full_name: repoName,
       scm: repo.repoScm,
       links: {
         clone: [
           {
-            name: "https",
-            href: `https://${user.userName}@${originUrl.host}/${
-              settings.repoName
-            }.${repo.repoScm}`
+            name: 'https',
+            href: `https://${user.userName}@${originUrl.host}/${repoName}.${
+              repo.repoScm
+            }`,
           },
           {
-            name: "ssh",
-            href: `git@${originUrl.host}:${repo.repoName}.${repo.repoScm}`
-          }
-        ]
-      }
+            name: 'ssh',
+            href: `git@${originUrl.host}:${repo.repoName}.${repo.repoScm}`,
+          },
+        ],
+      },
     };
 
     const u = {
       uuid: user.userUuid,
-      username: user.userName
+      username: user.userName,
     };
 
     return (
@@ -47,7 +46,7 @@ export default class extends React.Component {
           onDialogDismissed={this.dismissDialog}
           repository={repository}
           user={u}
-          defaultProtocol='https'
+          defaultProtocol="https"
           isOpen={this.state.isOpen}
         />
         <Button
@@ -63,4 +62,3 @@ export default class extends React.Component {
     );
   }
 }
-

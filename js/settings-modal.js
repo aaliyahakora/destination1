@@ -1,32 +1,46 @@
-import React from "react";
-import ModalDialog from "@atlaskit/modal-dialog";
+import React from 'react';
+import ModalDialog from '@atlaskit/modal-dialog';
 
-import Settings from "./settings";
+import { SettingsContext } from './settings';
+import SettingsForm from './settings-form';
 
 export default class extends React.Component {
-	saveForm = () => {
-		if (this.settings) {
-			this.settings.handleSubmit();
-		}
-	};
+  static contextType = SettingsContext;
 
-	render() {
-		const { closeSettings, settings, parentRepo, app } = this.props;
-		const actions = [
-			{ text: "Save", onClick: this.saveForm },
-			{ text: "Cancel", onClick: closeSettings }
-		];
+  submit = () => {
+    if (!this.form) {
+      return;
+    }
 
-		return (
-			<ModalDialog heading="Settings" onClose={closeSettings} actions={actions}>
-				<Settings
-					settings={settings}
-					closeSettings={closeSettings}
-					app={app}
-					parentRepo={parentRepo}
-					ref={s => {this.settings = s}}
-				/>
-			</ModalDialog>
-		);
-	}
+    this.context.saveSettings(this.form.getData());
+  };
+
+  render() {
+    if (!this.context.isOpen) {
+      return null;
+    }
+
+    const actions = [
+      { text: 'Save', onClick: this.submit },
+      { text: 'Cancel', onClick: this.context.closeSettings },
+    ];
+
+    return (
+      <ModalDialog
+        heading="Settings"
+        onClose={this.context.closeSettings}
+        actions={actions}
+      >
+        <SettingsForm
+          ref={form => {
+            this.form = form;
+          }}
+          baseDir={this.context.baseDir}
+          index={this.context.index}
+          repoName={this.context.repoName}
+          onSubmit={this.submit}
+        />
+      </ModalDialog>
+    );
+  }
 }

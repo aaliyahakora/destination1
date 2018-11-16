@@ -11,12 +11,11 @@ export const getQuery = val => query[val];
 export default function makeRequest(opts) {
   return new Promise((resolve, reject) => {
     getRequest.then(request =>
-      request(
-        Object.assign({}, opts, {
-          success: resolve,
-          error: reject,
-        })
-      )
+      request({
+        ...opts,
+        success: resolve,
+        error: reject,
+      })
     );
   });
 }

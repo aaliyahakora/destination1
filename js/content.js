@@ -1,60 +1,89 @@
-import Spinner from "@atlaskit/spinner";
-import React from "react";
+import Spinner from '@atlaskit/spinner';
+import PropTypes from 'prop-types';
+import React from 'react';
 
-import makeRequest from "./request";
+import makeRequest from './request';
 
 const pathPattern = /src\/[^/]+\/(.+)/;
 const getPathFromHref = href => pathPattern.exec(href)[1];
 
 export default class extends React.Component {
-  constructor(props) {
-    super(props);
+  static propTypes = {
+    // cards: PropTypes.arrayOf(CardType),
+    // files: PropTypes.arrayOf(FileType),
+    // onOpenFile: PropTypes.func,
+    onOpenPath: PropTypes.func,
+    repoName: PropTypes.string,
+    path: PropTypes.string,
+  };
 
-    this.state = { content: null, isLoading: true };
+  static defaultProps = {
+    onOpenPath: () => {},
+  };
 
-    const { path } = this.props;
-    if (path) this.loadContent(path);
-  }
+  state = {
+    content: null,
+    isLoading: true,
+  };
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.path !== nextProps.path) {
-      this.setState({ isLoading: true, content: null });
-      this.loadContent(nextProps.path);
+  componentDidMount() {
+    if (this.props.path) {
+      this.loadContent(this.props.path);
     }
   }
 
-  componentDidUpdate() {
-    if (window.MathJax.Hub) {
-      window.MathJax.Hub.Typeset();
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.path !== prevProps.path) {
+      this.loadContent(this.props.path);
     }
+
+    if (!this.state.isLoading && prevState.isLoading) {
+      if (this.state.content && window.MathJax.Hub) {
+        window.MathJax.Hub.Typeset();
+      }
+    }
+  }
+
+  getContentRef = content => {
     if (this.content) {
-      this.content.addEventListener("click", e => {
-        const el = e.target;
-        if (el.tagName !== "A") {
-          return;
-        }
-
-        e.preventDefault();
-        if (this.props.onOpenPath) {
-          this.props.onOpenPath(getPathFromHref(el.href));
-        }
-      });
+      this.content.removeEventListener('click', this.catchClicks);
     }
-  }
+    this.content = content;
+    if (this.content) {
+      this.content.addEventListener('click', this.catchClicks);
+    }
+  };
+
+  catchClicks = e => {
+    const el = e.target;
+    if (el.tagName !== 'A') {
+      return;
+    }
+
+    e.preventDefault();
+    this.props.onOpenPath(getPathFromHref(el.href));
+  };
 
   loadContent = path => {
+    this.setState({
+      isLoading: true,
+      content: null,
+    });
+
     makeRequest({
-      url: `/2.0/repositories/${this.props.repoName}/src/master/${path}?format=rendered`
+      url: `/2.0/repositories/${
+        this.props.repoName
+      }/src/master/${path}?format=rendered`,
     })
       .then(res => {
         this.setState({
           content: res.html,
-          isLoading: false
+          isLoading: false,
         });
       })
       .catch(() => {
         this.setState({
-          isLoading: false
+          isLoading: false,
         });
       });
   };
@@ -64,23 +93,24 @@ export default class extends React.Component {
       return (
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 40
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 40,
           }}
         >
           <Spinner delay={0} size="medium" />
         </div>
       );
     }
+
     if (!this.state.content) {
       return <div>Nothing found</div>;
     }
 
     return (
       <div
-        ref={c => (this.content = c)}
+        ref={this.getContentRef}
         dangerouslySetInnerHTML={{ __html: this.state.content }}
       />
     );

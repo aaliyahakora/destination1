@@ -1,86 +1,71 @@
-import React from "react";
+import React from 'react';
 
-import Button from "@atlaskit/button";
-import PageHeader from "@atlaskit/page-header";
-import { BreadcrumbsStateless, BreadcrumbsItem } from "@atlaskit/breadcrumbs";
+import Button from '@atlaskit/button';
+import PageHeader from '@atlaskit/page-header';
+import { BreadcrumbsStateless, BreadcrumbsItem } from '@atlaskit/breadcrumbs';
 
-import PageGrid from "./page-grid";
-import SettingsModal from "./settings-modal";
+import PageGrid from './page-grid';
+import Settings from './settings';
+import { RepositoryType, UserType } from './types';
 
 export default class extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      settingsOpen: false
-    };
-  }
+  static propTypes = {
+    parentRepo: RepositoryType,
+    user: UserType,
+  };
 
   componentDidMount() {
-    window.AP.sizeToParent();
+    window.AP.env.sizeToParent();
   }
 
-  closeSettings = () => {
-    this.setState({ settingsOpen: false });
-  };
-
-  openSettings = () => {
-    this.setState({ settingsOpen: true });
-  };
-
   render() {
-    const { user, parentRepo, app, settings } = this.props;
+    const { user, parentRepo } = this.props;
 
     return (
       <PageGrid>
         <PageHeader
           breadcrumbs={
             <BreadcrumbsStateless>
-              <BreadcrumbsItem text={parentRepo.repoName.split("/")[0]} />
-              <BreadcrumbsItem text={parentRepo.repoName.split("/")[1]} />
-              <BreadcrumbsItem text="Setup" />
+              <BreadcrumbsItem text={parentRepo.repoName.split('/')[0]} />
+              <BreadcrumbsItem text={parentRepo.repoName.split('/')[1]} />
+              <BreadcrumbsItem text="wiki" />
             </BreadcrumbsStateless>
           }
         />
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 40
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 40,
           }}
         >
-          <div style={{ margin: "15px" }}>
-            <h3>Work more collaboratively and get more done with wikis</h3>
-          </div>
-          <div>
+          <h3>Work more collaboratively and get more done with wikis</h3>
+          <p>
             This is some longer text that goes underneath the title text. It
             should say something specific about what a wiki is and how teams
             might like to use them. That would be super cool. You know what
             else? We could even put a screenshot or animated gif showing an
             example of a wiki in action!
-          </div>
-          <div style={{ paddingTop: "15px" }}>
-            <Button
-              appearance="primary"
-              onClick={this.openSettings}
-              isDisabled={!user.userIsAdmin}
-            >
-              Configure
-            </Button>
-          </div>
-          {user.userIsAdmin === "false" && (
+          </p>
+          <p>
+            <Settings>
+              {({ openSettings }) => (
+                <Button
+                  appearance="primary"
+                  onClick={openSettings}
+                  isDisabled={!user.userIsAdmin}
+                >
+                  Configure
+                </Button>
+              )}
+            </Settings>
+          </p>
+          {!user.userIsAdmin && (
             <small>
               Please contact the repository admin to configure the Wiki
             </small>
-          )}
-          {this.state.settingsOpen && (
-            <SettingsModal
-              settings={settings}
-              closeSettings={this.closeSettings}
-              app={app}
-              parentRepo={parentRepo}
-            />
           )}
         </div>
       </PageGrid>
