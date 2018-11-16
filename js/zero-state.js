@@ -62,7 +62,7 @@ export default class extends React.Component {
               )}
             </Settings>
           </p>
-          {user.userIsAdmin === 'false' && (
+          {!user.userIsAdmin && (
             <small>
               Please contact the repository admin to configure the Wiki
             </small>
