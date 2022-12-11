@@ -40,7 +40,7 @@
     "@atlassian/bitkit-clone-controls": "^2.2.0",
     "@atlassian/bitkit-sidebar": "^2.2.0",
     "prop-types": "^15.6.2",
-    "qs": "^6.5.2",
+    "qs": "^6.5.3",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-intl": "^2.4.0",
